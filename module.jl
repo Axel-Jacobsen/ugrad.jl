@@ -1,16 +1,15 @@
-module µNet
+module µModule
 export Module, Neuron, Layer, zero_grads, parameters, forward
 
-include("engine.jl")
 
-import .Engine as en
+import .µNet as µ
 import Distributions as d
 
 
 abstract type Module end
 
-function parameters(m::Module)::Vector{en.Value}
-  Vector{en.Value}()
+function parameters(m::Module)::Vector{µ.Value}
+  Vector{µ.Value}()
 end
 
 function zero_grads(m::Module)
@@ -21,16 +20,16 @@ end
 
 
 struct Neuron <: Module
-  weights::Vector{en.Value}
-  bias::en.Value
-  function Neuron(nin::Int) 
-    weights = [en.Value(rand(d.Uniform(-1, 1))) for _ in 1:nin]
-    bias = en.Value(rand(d.Uniform(-1, 1)))
+  weights::Vector{µ.Value}
+  bias::µ.Value
+  function Neuron(nin::Int)
+    weights = [µ.Value(rand(d.Uniform(-1, 1))) for _ in 1:nin]
+    bias = µ.Value(rand(d.Uniform(-1, 1)))
     new(weights, bias)
   end
 end
 
-function parameters(n::Neuron)::Vector{en.Value}
+function parameters(n::Neuron)::Vector{µ.Value}
   [n.weights; n.bias]
 end
 
@@ -50,7 +49,7 @@ struct Layer <: Module
   end
 end
 
-function parameters(l::Layer)::Vector{en.Value}
+function parameters(l::Layer)::Vector{µ.Value}
   vcat([parameters(n) for n in l.neurons])
 end
 

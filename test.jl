@@ -1,25 +1,24 @@
 #! /usr/local/bin/julia
 
-include("µnet.jl")
-include("engine.jl")
 
+include("µnet.jl")
 import .µNet as µ
-import .Engine as E
+
 using Test
 
 
 verbose = true
 
 @testset "Basic Engine Tests" begin
-  a = E.Value(3)
-  b = E.Value(4)
+  a = µ.Value(3)
+  b = µ.Value(4)
   c = a + b
   @test c.data == a.data + b.data
-  E.backward(c)
+  µ.backward(c)
   @test a.grad == 1
   @test b.grad == 1
   @test c.grad == 1
-  d = E.Value(5)
+  d = µ.Value(5)
   c *= 5
 end
 
@@ -28,6 +27,6 @@ end
   c = µ.Neuron(5)
   out = µ.forward(c, [1,2,3,4,5])
   println(out)
-  E.backward(out)
+  µ.backward(out)
   println(out)
 end

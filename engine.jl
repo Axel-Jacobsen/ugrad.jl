@@ -1,6 +1,4 @@
-module µNet
-
-module Engine
+module µEngine
 export Value, backward
 
 
@@ -142,5 +140,4 @@ end
 Base.show(io::IO, x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
 Base.show(io::IO, m::MIME"text/plain", x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
 
-end
 end

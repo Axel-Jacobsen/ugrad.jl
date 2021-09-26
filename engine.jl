@@ -1,12 +1,8 @@
-#! /usr/local/bin/julia
+module µNet
 
-"""
-µgrad for julia
+module Engine
+export Value, backward
 
-to learn auto-diff and julia
-
-pretty much a direct port of https://github.com/karpathy/micrograd in Julia
-"""
 
 mutable struct Value
   data::Float64
@@ -14,13 +10,9 @@ mutable struct Value
   _backward::Function
   _prev::Set{Value}
   _op::String
-  function Value(data; _children::Set=Set(), _op::String="")
-    new(data, 0, ()->nothing, _children, _op)
-  end
+  Value(data; _children::Set=Set(), _op::String="") = new(data, 0, ()->nothing, _children, _op)
 end
 
-Base.show(io::IO, x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
-Base.show(io::IO, m::MIME"text/plain", x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
 
 function Base.:+(x::Union{Number, Value}, y::Union{Number, Value})::Value
   """ x + y = z
@@ -145,4 +137,10 @@ function backward(x::Value)
   for v in Iterators.reverse(topo)
     v._backward()
   end
+end
+
+Base.show(io::IO, x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
+Base.show(io::IO, m::MIME"text/plain", x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
+
+end
 end

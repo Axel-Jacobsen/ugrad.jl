@@ -117,7 +117,7 @@ function relu(x::Union{Number, Value})::Value
 end
 
 
-function backward(x::Value)
+function backward!(x::Value)
   topo = Vector{Value}()
   visited = Set{Value}()
   function traverse_call_tree(v::Value)

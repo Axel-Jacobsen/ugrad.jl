@@ -1,11 +1,11 @@
 module µNet
 
-include("µengine.jl")
-using µEngine: Value, backward
-export Value, backward
+include("engine.jl")
+using .µEngine: Value, backward!
+export Value, backward!
 
-include("µmodule.jl")
-using µModule: Module, Neuron, Layer, zero_grads, parameters, forward
-export Module, Neuron, Layer, zero_grads, parameters, forward
+include("module.jl")
+using .µModule: Module, Neuron, Layer, zero_grads, parameters, forward!
+export Module, Neuron, Layer, zero_grads, parameters, forward!
 
 end

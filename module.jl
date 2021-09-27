@@ -50,7 +50,7 @@ struct Layer <: Module
 end
 
 function parameters(l::Layer)::Vector{µ.Value}
-  vcat([parameters(n) for n in l.neurons])
+  reduce(vcat, [parameters(n) for n in l.neurons])
 end
 
 function forward!(l::Layer, v::Vector{T} where T = Union{Real, µ.Value})

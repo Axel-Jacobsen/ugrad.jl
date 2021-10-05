@@ -1,5 +1,5 @@
 module µModule
-export Module, Neuron, Layer, zero_grads, parameters, forward!
+export Module, Neuron, Layer, zero_grad, parameters, forward!
 
 
 import Main.µNet as µ
@@ -8,13 +8,20 @@ import Distributions as d
 
 abstract type Module end
 
+
 function parameters(m::Module)::Vector{µ.Value}
   Vector{µ.Value}()
 end
 
-function zero_grads(m::Module)
+
+function zero_grad(v::µ.Value)
+  v.grad = 0
+end
+
+
+function zero_grad(m::Module)
   for v in parameters(m)
-    v.grad = 0
+    zero_grad(v)
   end
 end
 
@@ -38,7 +45,7 @@ function forward!(n::Neuron, v::Vector{T} where T = Union{Real, µ.Value})
 end
 
 Base.show(io::IO, x::Neuron) = print(io, "Neuron(nin=$(length(x.weights)))")
-Base.show(io::IO, m::MIME"text/plain", x::Neuron) = print(io, "Neuron(nin=$(length(x.weights))")
+Base.show(io::IO, m::MIME"text/plain", x::Neuron) = print(io, "Neuron(nin=$(length(x.weights)))")
 
 
 struct Layer <: Module
@@ -57,7 +64,7 @@ function forward!(l::Layer, v::Vector{T} where T = Union{Real, µ.Value})
   [forward!(n, v) for n in l.neurons]
 end
 
-Base.show(io::IO, x::Layer) = print(io, "Layer(nin=$(length(x.neurons)), nout=$(length(x.neurons[1].weights)))")
-Base.show(io::IO, m::MIME"text/plain", x::Layer) = print(io, "Layer(nin=$(length(x.neurons)), nout=$(length(x.neurons[1].weights)))")
+Base.show(io::IO, x::Layer) = print(io, "Layer(nin=$(length(x.neurons[1].weights)), nout=$(length(x.neurons)))")
+Base.show(io::IO, m::MIME"text/plain", x::Layer) = print(io, "Layer(nin=$(length(x.neurons[1].weights)), nout=$(length(x.neurons)))")
 
 end

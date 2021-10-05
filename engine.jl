@@ -64,15 +64,6 @@ function Base.:^(x::Union{Number, Value}, y::Number)::Value
 end
 
 
-function Base.:-(x::Union{Number, Value}, y::Union{Number, Value})::Value
-  """ x - y = z
-  """
-  x = isa(x, Value) ? x : Value(x)
-  y = isa(y, Value) ? y : Value(y)
-  x + (-y)
-end
-
-
 function Base.:inv(x::Value)::Value
   """ x^-1 = z
   """
@@ -88,20 +79,6 @@ function Base.:inv(x::Value)::Value
 end
 
 
-function Base.:/(x::Union{Number, Value}, y::Union{Number, Value})::Value
-  """ x / y = z
-  """
-  x = isa(x, Value) ? x : Value(x)
-  y = isa(y, Value) ? y : Value(y)
-  x * y^(-1)
-end
-
-
-function Base.:-(x::Value)::Value
-  -1 * x
-end
-
-
 function relu(x::Union{Number, Value})::Value
   """ z = relu(x) = x > 0 ? x : 0
   """
@@ -114,6 +91,29 @@ function relu(x::Union{Number, Value})::Value
   z._backward = _backward
 
   z
+end
+
+
+function Base.:-(x::Value)::Value
+  -1 * x
+end
+
+
+function Base.:/(x::Union{Number, Value}, y::Union{Number, Value})::Value
+  """ x / y = z
+  """
+  x = isa(x, Value) ? x : Value(x)
+  y = isa(y, Value) ? y : Value(y)
+  x * y^(-1)
+end
+
+
+function Base.:-(x::Union{Number, Value}, y::Union{Number, Value})::Value
+  """ x - y = z
+  """
+  x = isa(x, Value) ? x : Value(x)
+  y = isa(y, Value) ? y : Value(y)
+  x + (-y)
 end
 
 
@@ -137,6 +137,8 @@ function backward!(x::Value)
   end
 end
 
+
+# printing
 Base.show(io::IO, x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
 Base.show(io::IO, m::MIME"text/plain", x::Value) = print(io, "Value(data=$(x.data), grad=$(x.grad))")
 
